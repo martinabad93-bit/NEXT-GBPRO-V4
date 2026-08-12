@@ -377,6 +377,52 @@ input[readonly] { cursor:default; }
     .preview-toolbar-right > * { flex:1; }
 }
 
+
+/* =========================================================
+   V5 · CLEAN WORKSPACE + CLIENT CAPTURE
+   ========================================================= */
+.top-bar { margin-bottom: 12px; }
+.top-bar .top-actions { gap: 6px; }
+.top-tools-trigger {
+    width: 40px; min-width: 40px; height: 40px; padding: 0;
+    border: 1px solid var(--border-color); border-radius: 12px;
+    background: var(--bg-card-2); color: var(--text-soft);
+    cursor: pointer; font-size: 18px; line-height: 1;
+    transition: transform .2s, border-color .2s, color .2s, background .2s;
+}
+.top-tools-trigger:hover { transform: translateY(-1px); border-color: var(--border-strong); color: var(--text-main); }
+.top-tools { position: relative; }
+.top-tools-menu {
+    position: absolute; right: 0; top: 48px; z-index: 500;
+    width: 280px; padding: 10px; border: 1px solid var(--border-strong);
+    border-radius: 16px; background: var(--bg-card); box-shadow: var(--shadow-soft);
+    display: none; gap: 8px; flex-direction: column;
+}
+.top-tools-menu.open { display: flex; animation: menuIn .18s ease both; }
+@keyframes menuIn { from { opacity:0; transform:translateY(-5px) scale(.98); } to { opacity:1; transform:none; } }
+.top-tools-menu .select-memory,
+.top-tools-menu .btn-outline,
+.top-tools-menu .btn-reset { width: 100%; min-height: 42px; }
+.top-tools-menu .menu-title { padding: 4px 4px 7px; color: var(--text-muted); font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.3px; }
+
+/* Final screen is intentionally distraction-free. */
+body.final-screen .top-bar,
+body.final-screen .page-heading { display:none !important; }
+body.final-screen { padding-top: 18px; }
+body.final-screen .app-container { max-width: 1180px !important; }
+body.final-screen #right-panel.final-mode { min-height: calc(100vh - 36px); }
+
+/* Client image export: only the actual report is captured. */
+#final-summary.capture-report { background: var(--bg-card); }
+#final-summary.capture-report .final-action-card,
+#final-summary.capture-report .final-footnote { display:none !important; }
+#final-summary.capture-report .final-hero { margin-bottom: 28px; }
+#final-summary.capture-report .final-main-grid { margin-bottom: 0; }
+
+@media (max-width:700px) {
+    .top-tools-menu { right: -2px; width: min(280px, calc(100vw - 24px)); }
+}
+
 /* =========================================================
    PRINT / PDF
    ========================================================= */
@@ -547,6 +593,12 @@ input[readonly] { cursor:default; }
     body.final-report-print #final-summary { display:block !important; }
 }
 
+
+@media print {
+    body.final-report-print .final-action-card,
+    body.final-report-print .final-footnote { display:none !important; }
+    body.final-report-print #final-summary { max-width:100% !important; }
+}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
@@ -574,14 +626,17 @@ input[readonly] { cursor:default; }
         <div class="brand-copy"><strong>NEXT GB</strong><span>Auto Import · Elite</span></div>
     </div>
     <div class="top-actions">
-        <select id="select-cotizaciones" class="select-memory" onchange="cargarCotizacion()">
-            <option value="">📂 Cargar guardada</option>
-        </select>
-        <button class="btn-outline" onclick="guardarCotizacion()">💾 Guardar</button>
-        <button class="btn-reset" onclick="limpiarCaso()">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
-            Nuevo caso
-        </button>
+        <div class="top-tools">
+            <button class="top-tools-trigger" type="button" aria-label="Herramientas" onclick="toggleTopTools(event)">⋯</button>
+            <div id="top-tools-menu" class="top-tools-menu">
+                <div class="menu-title">Herramientas de cotización</div>
+                <select id="select-cotizaciones" class="select-memory" onchange="cargarCotizacion(); closeTopTools();">
+                    <option value="">📂 Cargar guardada</option>
+                </select>
+                <button class="btn-outline" onclick="guardarCotizacion(); closeTopTools();">💾 Guardar cotización</button>
+                <button class="btn-reset" onclick="limpiarCaso(); closeTopTools();">↻ Nueva cotización</button>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -953,7 +1008,7 @@ input[readonly] { cursor:default; }
                 <div>
                     <span class="final-eyebrow">SIGUIENTE ACCIÓN</span>
                     <h3>Presenta esta cotización con una imagen de nivel profesional.</h3>
-                    <p>Genera un PDF formal, una imagen lista para WhatsApp o comparte el resumen directamente con tu cliente.</p>
+                    <p>Genera el documento formal o una imagen limpia del reporte, lista para compartir con tu cliente.</p>
                 </div>
                 <div class="final-actions">
                     <button class="final-btn final-btn-primary" onclick="presentarCotizacion()">✨ Presentar cotización</button>
@@ -998,8 +1053,9 @@ input[readonly] { cursor:default; }
         if (show) {
             leftPanel.style.display = 'none';
             mainContainer.style.gridTemplateColumns = '1fr';
-            mainContainer.style.maxWidth = '750px';
+            mainContainer.style.maxWidth = '1180px';
             btnVolver.style.display = 'block';
+            document.body.classList.add('final-screen');
             window.scrollTo({ top: 0, behavior: 'smooth' });
             showToast('Modo Vista Previa Activo', '📄');
         } else {
@@ -1007,6 +1063,7 @@ input[readonly] { cursor:default; }
             mainContainer.style.gridTemplateColumns = '1.1fr 1fr';
             mainContainer.style.maxWidth = '1100px';
             btnVolver.style.display = 'none';
+            document.body.classList.remove('final-screen');
             const rightPanel = document.getElementById('right-panel');
             if (rightPanel) rightPanel.classList.remove('final-mode');
         }
@@ -1063,6 +1120,19 @@ input[readonly] { cursor:default; }
     // ==========================================
     // SISTEMA DE MEMORIA
     // ==========================================
+
+    function toggleTopTools(event) {
+        if (event) event.stopPropagation();
+        document.getElementById('top-tools-menu')?.classList.toggle('open');
+    }
+    function closeTopTools() {
+        document.getElementById('top-tools-menu')?.classList.remove('open');
+    }
+    document.addEventListener('click', (e) => {
+        const wrap = document.querySelector('.top-tools');
+        if (wrap && !wrap.contains(e.target)) closeTopTools();
+    });
+
     function actualizarSelectCotizaciones() {
         const sel = document.getElementById('select-cotizaciones');
         sel.innerHTML = '<option value="">📂 Cargar Guardada...</option>';
@@ -1818,9 +1888,9 @@ input[readonly] { cursor:default; }
 
     async function descargarResumenPNG() {
         updateFinalSummary();
-        const target = document.getElementById('final-summary');
-        if (!target) return;
-        showToast('Generando imagen de la cotización…', '🖼️');
+        const source = document.getElementById('final-summary');
+        if (!source) return;
+        showToast('Preparando imagen ejecutiva…', '🖼️');
 
         if (typeof html2canvas !== 'function') {
             showToast('No se pudo cargar el exportador de imagen. Usa PDF.', '⚠️');
@@ -1833,23 +1903,44 @@ input[readonly] { cursor:default; }
             await new Promise(r => setTimeout(r, 250));
         }
 
+        let clone;
         try {
-            const canvas = await html2canvas(target, {
+            clone = source.cloneNode(true);
+            clone.id = 'final-summary-capture';
+            clone.classList.add('capture-report');
+            clone.style.display = 'block';
+            clone.style.position = 'fixed';
+            clone.style.left = '-100000px';
+            clone.style.top = '0';
+            clone.style.width = Math.min(source.offsetWidth, 1100) + 'px';
+            clone.style.maxWidth = 'none';
+            clone.style.margin = '0';
+            clone.style.zIndex = '-1';
+            clone.querySelectorAll('.final-action-card, .final-footnote').forEach(el => el.remove());
+            document.body.appendChild(clone);
+
+            await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
+
+            const canvas = await html2canvas(clone, {
                 backgroundColor: getComputedStyle(document.body).backgroundColor || '#070a10',
-                scale: Math.min(2, window.devicePixelRatio || 1.5),
+                scale: Math.min(2.5, Math.max(2, window.devicePixelRatio || 1)),
                 useCORS: true,
-                logging: false
+                logging: false,
+                windowWidth: clone.scrollWidth,
+                windowHeight: clone.scrollHeight
             });
 
             const link = document.createElement('a');
             const vin = (document.getElementById('vin')?.value || '').trim().slice(-6).toUpperCase();
-            link.download = `NEXT-GB-COTIZACION-${vin || 'RESUMEN'}.png`;
+            link.download = `NEXT-GB-INVESTMENT-REPORT-${vin || 'RESUMEN'}.png`;
             link.href = canvas.toDataURL('image/png', 1.0);
             link.click();
-            showToast('Imagen descargada correctamente.', '✅');
+            showToast('Imagen ejecutiva descargada.', '✅');
         } catch (err) {
             console.error(err);
             showToast('No fue posible generar la imagen.', '❌');
+        } finally {
+            clone?.remove();
         }
     }
 
