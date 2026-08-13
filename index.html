@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Next GB Auto Import - Elite Pro</title>
+    <title>Next GB Auto Import - Elite Pro V7</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
 
@@ -424,6 +424,276 @@ body.final-screen #right-panel.final-mode { min-height: calc(100vh - 36px); }
 }
 
 /* =========================================================
+   V6 · ELITE VISUAL REFINEMENT + PREMIUM WIZARD
+   ========================================================= */
+
+/* =========================================================
+   V7 · WIZARD MOTION + EXECUTIVE POLISH
+   ========================================================= */
+.wizard-transition { animation:wizardPanelIn .48s cubic-bezier(.22,1,.36,1) both; }
+.wizard-transition.from-right { animation-name:wizardPanelFromRight; }
+.wizard-transition.from-left { animation-name:wizardPanelFromLeft; }
+
+@keyframes wizardPanelIn {
+    from { opacity:0; transform:translateY(12px) scale(.995); filter:blur(2px); }
+    to { opacity:1; transform:none; filter:none; }
+}
+@keyframes wizardPanelFromRight {
+    from { opacity:0; transform:translateX(24px); }
+    to { opacity:1; transform:none; }
+}
+@keyframes wizardPanelFromLeft {
+    from { opacity:0; transform:translateX(-24px); }
+    to { opacity:1; transform:none; }
+}
+.wizard-progress-fill { transition:width .62s cubic-bezier(.22,1,.36,1); }
+.wizard-progress-step i {
+    transition:transform .35s cubic-bezier(.22,1,.36,1),box-shadow .35s ease,
+                background .35s ease,border-color .35s ease,color .35s ease;
+}
+.wizard-progress-step.active i { animation:wizardNodeIn .45s cubic-bezier(.22,1,.36,1); }
+@keyframes wizardNodeIn {
+    0% { transform:scale(.88); }
+    65% { transform:scale(1.08); }
+    100% { transform:scale(1.04); }
+}
+.form-footer .btn-action {
+    transition:transform .22s ease,box-shadow .22s ease,filter .22s ease;
+}
+.form-footer .btn-action:hover { transform:translateY(-1px); }
+.form-footer .btn-action:active { transform:translateY(1px) scale(.99); }
+
+.final-action-card,.final-kpi,.final-vehicle-card,.margin-card {
+    animation:executiveReveal .55s cubic-bezier(.22,1,.36,1) both;
+}
+.final-kpi:nth-child(2) { animation-delay:.04s; }
+.final-kpi:nth-child(3) { animation-delay:.08s; }
+.final-kpi:nth-child(4) { animation-delay:.12s; }
+@keyframes executiveReveal {
+    from { opacity:0; transform:translateY(10px); }
+    to { opacity:1; transform:none; }
+}
+@media (prefers-reduced-motion:reduce) {
+    .wizard-transition,.wizard-progress-step.active i,.final-action-card,
+    .final-kpi,.final-vehicle-card,.margin-card { animation:none!important; }
+    .wizard-progress-fill,.wizard-progress-step i { transition:none!important; }
+}
+
+
+/* Stronger hierarchy without adding visual noise */
+.page-heading h2 { font-weight: 850; }
+.section-intro h1 { font-weight: 850; }
+.card { box-shadow: 0 14px 38px rgba(0,0,0,.20); }
+
+/* Premium wizard progress */
+.wizard-progress-wrap {
+    margin: 0 2px 18px;
+    padding: 14px 15px 16px;
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    background:
+        linear-gradient(180deg, rgba(59,130,246,.045), transparent 65%),
+        var(--bg-card-2);
+    box-shadow: 0 10px 28px rgba(0,0,0,.10);
+}
+.wizard-progress-head {
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+    gap:12px;
+    margin-bottom:14px;
+}
+.wizard-progress-head > div {
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+}
+.wizard-progress-kicker {
+    color:var(--text-muted);
+    font-size:8px;
+    font-weight:900;
+    text-transform:uppercase;
+    letter-spacing:1.5px;
+}
+.wizard-progress-head strong {
+    color:var(--text-main);
+    font-size:11px;
+    font-weight:850;
+}
+.wizard-progress-brand {
+    color:var(--accent-2);
+    font-size:8px;
+    font-weight:900;
+    text-transform:uppercase;
+    letter-spacing:1.3px;
+}
+.wizard-progress-rail {
+    position:relative;
+    height:38px;
+    display:flex;
+    align-items:center;
+}
+.wizard-progress-rail::before {
+    content:'';
+    position:absolute;
+    left:14px;
+    right:14px;
+    top:50%;
+    height:5px;
+    transform:translateY(-50%);
+    border-radius:999px;
+    background:var(--bg-elevated);
+    border:1px solid var(--border-color);
+}
+.wizard-progress-fill {
+    position:absolute;
+    left:14px;
+    top:50%;
+    height:5px;
+    width:33.333%;
+    transform:translateY(-50%);
+    border-radius:999px;
+    background:linear-gradient(90deg,var(--accent),var(--accent-2));
+    box-shadow:0 0 18px rgba(59,130,246,.32);
+    transition:width .55s cubic-bezier(.22,1,.36,1);
+    z-index:1;
+}
+.wizard-progress-steps {
+    position:relative;
+    width:100%;
+    height:100%;
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    z-index:2;
+}
+.wizard-progress-step {
+    position:relative;
+    display:flex;
+    align-items:center;
+    gap:7px;
+    color:var(--text-muted);
+    font-size:8px;
+    font-weight:800;
+    cursor:default;
+}
+.wizard-progress-step:nth-child(1) { justify-content:flex-start; }
+.wizard-progress-step:nth-child(2) { justify-content:center; }
+.wizard-progress-step:nth-child(3) { justify-content:flex-end; }
+.wizard-progress-step i {
+    width:30px;
+    height:30px;
+    display:grid;
+    place-items:center;
+    flex:none;
+    border-radius:10px;
+    background:var(--bg-elevated);
+    border:1px solid var(--border-strong);
+    color:var(--text-muted);
+    font-size:8px;
+    font-style:normal;
+    font-weight:900;
+    transition:all .35s ease;
+}
+.wizard-progress-step b {
+    font-size:8px;
+    font-weight:850;
+    text-transform:uppercase;
+    letter-spacing:.65px;
+    transition:color .35s ease;
+}
+.wizard-progress-step.active i {
+    color:#fff;
+    background:linear-gradient(135deg,var(--accent),#1d4ed8);
+    border-color:var(--accent);
+    box-shadow:0 8px 20px rgba(37,99,235,.25);
+    transform:scale(1.04);
+}
+.wizard-progress-step.active b { color:var(--text-main); }
+.wizard-progress-step.completed i {
+    color:var(--success);
+    background:rgba(34,197,94,.11);
+    border-color:rgba(34,197,94,.25);
+}
+.wizard-progress-step.completed i::before { content:'✓'; }
+.wizard-progress-step.completed i { font-size:0; }
+.wizard-progress-step.completed b { color:var(--text-soft); }
+
+/* Give the final presentation a stronger executive identity */
+#right-panel.final-mode {
+    background:
+        radial-gradient(circle at 100% 0%, rgba(59,130,246,.07), transparent 28%),
+        var(--bg-card);
+    border-color:rgba(59,130,246,.16);
+}
+#right-panel.final-mode .final-hero {
+    padding-bottom:20px;
+    border-bottom:1px solid var(--border-color);
+}
+#right-panel.final-mode .final-hero h2 {
+    font-size:35px;
+    letter-spacing:-1.6px;
+}
+#right-panel.final-mode .final-kpi {
+    min-height:135px;
+    transition:transform .25s ease, border-color .25s ease, box-shadow .25s ease;
+}
+#right-panel.final-mode .final-kpi:hover {
+    transform:translateY(-2px);
+    border-color:var(--border-strong);
+    box-shadow:0 14px 30px rgba(0,0,0,.14);
+}
+#right-panel.final-mode .final-kpi-primary {
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.03);
+}
+#right-panel.final-mode .final-total-line {
+    margin-top:4px;
+    padding:14px 12px 0;
+    border-top:1px solid var(--border-strong);
+}
+#right-panel.final-mode .margin-circle {
+    transition:transform .4s ease, box-shadow .4s ease;
+}
+#right-panel.final-mode .margin-circle:hover {
+    transform:scale(1.03);
+    box-shadow:inset 0 0 30px rgba(34,197,94,.09), 0 10px 25px rgba(34,197,94,.08);
+}
+
+/* Cleaner client-report capture: remove web-app framing from the exported card */
+#final-summary.capture-report {
+    border-radius:0;
+    box-shadow:none;
+}
+#final-summary.capture-report .final-hero h2 {
+    font-size:32px;
+}
+#final-summary.capture-report .final-kpi:hover,
+#final-summary.capture-report .margin-circle:hover {
+    transform:none;
+    box-shadow:none;
+}
+
+@media (max-width:700px) {
+    .wizard-progress-wrap { margin-bottom:14px; padding:12px 12px 14px; }
+    .wizard-progress-head { margin-bottom:11px; }
+    .wizard-progress-brand { display:none; }
+    .wizard-progress-step { gap:5px; }
+    .wizard-progress-step b { display:none; }
+    .wizard-progress-step i { width:29px; height:29px; border-radius:9px; }
+    .wizard-progress-rail::before,
+    .wizard-progress-fill { left:13px; right:13px; }
+    .wizard-progress-fill { width:calc(33.333% - 1px); }
+    #right-panel.final-mode .final-hero h2 { font-size:28px; }
+}
+
+@media (max-width:480px) {
+    .wizard-progress-wrap { border-radius:14px; }
+    .wizard-progress-kicker { font-size:7px; }
+    .wizard-progress-head strong { font-size:10px; }
+    .wizard-progress-step i { width:27px; height:27px; }
+}
+
+
+/* =========================================================
    PRINT / PDF
    ========================================================= */
 @media print {
@@ -657,7 +927,23 @@ body.final-screen #right-panel.final-mode { min-height: calc(100vh - 36px); }
             <button class="tab-btn" data-step="02" onclick="openTab('tab-aduanas')"><span class="step-kicker">Paso 02</span><span class="step-name">Aduanas & DGA</span></button>
             <button class="tab-btn" data-step="03" onclick="openTab('tab-costos')"><span class="step-kicker">Paso 03</span><span class="step-name">Inversión & Margen</span></button>
         </div>
-        <div class="wizard-meta no-print"><span id="wizard-status">Paso 1 de 3</span><div class="progress-track"><div id="wizard-progress" class="progress-bar"></div></div><span>Elite Workflow</span></div>
+        <div class="wizard-progress-wrap no-print" aria-label="Progreso de la cotización">
+    <div class="wizard-progress-head">
+        <div>
+            <span class="wizard-progress-kicker">PROGRESO DE COTIZACIÓN</span>
+            <strong id="wizard-status">Paso 1 de 3</strong>
+        </div>
+        <span class="wizard-progress-brand">ELITE WORKFLOW</span>
+    </div>
+    <div class="wizard-progress-rail">
+        <div id="wizard-progress" class="wizard-progress-fill"></div>
+        <div class="wizard-progress-steps">
+            <span class="wizard-progress-step active" data-progress-step="1"><i>01</i><b>Subasta</b></span>
+            <span class="wizard-progress-step" data-progress-step="2"><i>02</i><b>Aduanas</b></span>
+            <span class="wizard-progress-step" data-progress-step="3"><i>03</i><b>Inversión</b></span>
+        </div>
+    </div>
+</div>
 
         <!-- PESTAÑA 1: SUBASTAS -->
         <div id="tab-subastas" class="card no-print tab-content active">
@@ -1666,10 +1952,19 @@ body.final-screen #right-panel.final-mode { min-height: calc(100vh - 36px); }
         const step = map[tabId] || 1;
         const progress = document.getElementById('wizard-progress');
         const status = document.getElementById('wizard-status');
+
+        /* The rail represents the current position: 33% → 66% → 100%. */
         if (progress) progress.style.width = (step / 3 * 100) + '%';
         if (status) status.textContent = `Paso ${step} de 3`;
+
         document.querySelectorAll('.tab-btn').forEach((btn, i) => {
             if (i < step - 1) btn.classList.add('completed'); else btn.classList.remove('completed');
+        });
+
+        document.querySelectorAll('.wizard-progress-step').forEach((node, i) => {
+            const nodeStep = i + 1;
+            node.classList.toggle('active', nodeStep === step);
+            node.classList.toggle('completed', nodeStep < step);
         });
     }
 
@@ -1952,9 +2247,18 @@ body.final-screen #right-panel.final-mode { min-height: calc(100vh - 36px); }
             showToast('Este paso se desbloquea al completar el anterior.', '🔒');
             return;
         }
+        const previous = wizardCurrentStep || target;
         _openTabElite(tabId);
         wizardCurrentStep = target;
         updateWizardUI(tabId);
+
+        const panel = document.getElementById(tabId);
+        if (panel) {
+            panel.classList.remove('wizard-transition','from-right','from-left');
+            void panel.offsetWidth;
+            panel.classList.add('wizard-transition');
+            panel.classList.add(target >= previous ? 'from-right' : 'from-left');
+        }
     };
 
     // Ensure the first internal transition can always unlock step 2.
